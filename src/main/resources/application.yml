@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: organizer
+  ai.ollama.chat.options:
+    model:  mistral:latest
+
+imap:
+  username: "some username"
+  password: "some password"
+  host: "host"
+  port: 993
+  ssl: true
+
+classifier-configuration:
+  descriptions:
+    Spam: "Unsolicited or irrelevant emails typically sent in bulk, often for advertising, phishing, or spreading malware. These emails are usually unwanted and may be flagged as junk by email systems."
+    Flyer: "Email that include sales, percent off, price drops, and is usually from known retailers"
+    Newsletter: "Regularly sent emails that provide updates, articles, or news about a specific topic, organization, or interest. These are typically informational and targeted at a subscribed audience."
+    Order: "Email contains order number information, or purchase information, or payment information, or status updates"
+    FanFic: Email that refers to works of fan fiction

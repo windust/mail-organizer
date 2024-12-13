@@ -1,0 +1,29 @@
+package com.spinningnoodle.mail.organizer.model;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Configuration
+@ConfigurationProperties(prefix = "classifier-configuration")
+@Data
+public class ClassifierConfiguration {
+    Map<String, String> descriptions;
+
+    public String forPrompt() {
+        return descriptions.entrySet().stream().map(e -> String.format("%s: %s", e.getKey(), e.getValue())).collect(Collectors.joining("\n\n"));
+    }
+
+    public String identify(String string) {
+        for (Map.Entry<String, String> entry : descriptions.entrySet()) {
+            if (string.toLowerCase().contains(entry.getKey().toLowerCase())) {
+                return entry.getKey();
+            }
+        }
+        return "Other";
+    }
+}
