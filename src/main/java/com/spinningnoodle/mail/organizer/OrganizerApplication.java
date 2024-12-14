@@ -19,8 +19,8 @@ public class OrganizerApplication {
     @Bean
     public RestClientCustomizer restClientCustomizer() {
         SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-        simpleClientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(60L));
-        simpleClientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(60L));
+        simpleClientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(120L));
+        simpleClientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(120L));
 
         return restClientBuilder -> {
             restClientBuilder.requestFactory(simpleClientHttpRequestFactory)

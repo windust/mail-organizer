@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.angus.mail.imap.IMAPFolder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -20,6 +23,7 @@ public class ImapService {
     private volatile Store store;
     private volatile Folder emailFolder;
     private volatile FolderConfig folderConfig;
+    private volatile int batchNumber = readBatchNumber();
 
     public ImapService(ImapConfiguration configuration, ClassifierConfiguration classifierConfiguration) throws MessagingException {
         this.configuration = configuration;
@@ -38,17 +42,44 @@ public class ImapService {
 
         int batchSize = 1000; // Define your preferred batch size
         int totalMessages = emailFolder.getMessageCount();
-        return Flux.range(1, (totalMessages + batchSize - 1) / batchSize)
+        return Flux.range(batchNumber, (totalMessages + batchSize - 1) / batchSize)
                 .concatMap(batch -> {
                     int start = (batch - 1) * batchSize + 1;
                     int end = Math.min(batch * batchSize, totalMessages);
                     try {
-                        return retrieve(start, end);
+                        return retrieve(start, end).doOnComplete(() -> {
+                            batchNumber = Math.max(batch-1,1);  // we finished previous batch
+                            writeBatchNumber(batchNumber);
+                        });
                     } catch (MessagingException e) {
                         return Flux.error(e);
                     }
                 });
     }
+
+    private void writeBatchNumber(int batchNumber) {
+        try {
+            Files.writeString(Paths.get("batch.txt"), String.valueOf(batchNumber-1));
+        } catch (IOException e) {
+            log.error("Failed to write batch number to batch.txt", e);
+        }
+    }
+    
+    private int readBatchNumber() {
+        try {
+            var batchFilePath = Paths.get("batch.txt");
+            if (Files.exists(batchFilePath)) {
+                var content = Files.readString(batchFilePath).trim();
+                return content.isEmpty() ? 1 : Math.max(Integer.parseInt(content),1);
+            } else {
+                return 1;
+            }
+        } catch (IOException | NumberFormatException e) {
+            log.error("Failed to read batch number, defaulting to 1", e);
+            return 1;
+        }
+    }
+
     public Flux<Email> retrieve(int start, int end) throws MessagingException {
         return Flux.create(sink -> {
             try {
