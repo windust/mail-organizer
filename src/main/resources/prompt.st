@@ -6,6 +6,7 @@ classify the above email. It can be from these different categories
 
 {classifier}
 
-Other: Any email that does not fall into the categories of Spam, Flyer, or Newsletter. This could include personal communications, transactional emails (e.g., receipts or order confirmations), or professional correspondence.
+Other: Any email that does not fall into any of the previous categories. This could include personal communications, or professional correspondence.
 
 What kind of email is this? Give me just the category name as category:<category>
+

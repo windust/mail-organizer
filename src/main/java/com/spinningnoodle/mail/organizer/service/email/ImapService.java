@@ -11,8 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 
-import java.io.IOException;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,21 +23,33 @@ public class ImapService {
     private volatile Store store;
     private volatile Folder emailFolder;
     private volatile FolderConfig folderConfig;
+    // which batch we last processed?
     private volatile int batchNumber = readBatchNumber();
 
+
+    /**
+     * Constructor to initialize ImapService with configuration and classifier configuration.
+     * Connects to the IMAP store and opens the INBOX folder.
+     *
+     * @param configuration the IMAP configuration
+     * @param classifierConfiguration the classifier configuration
+     * @throws MessagingException if there is an error connecting to the IMAP store or opening the folder
+     */
     public ImapService(ImapConfiguration configuration, ClassifierConfiguration classifierConfiguration) throws MessagingException {
         this.configuration = configuration;
         store = connect(configuration);
         emailFolder = store.getFolder("INBOX");
         emailFolder.open(Folder.READ_WRITE);
-        folderConfig = retrieveConfig(emailFolder, classifierConfiguration);
+        folderConfig = retrieveConfig(emailFolder, classifierConfiguration.getFolders());
         this.classifierConfiguration = classifierConfiguration;
     }
 
-    public int count() throws MessagingException {
-        return emailFolder.getMessageCount();
-    }
-    
+    /**
+     * Retrieves emails in batches and returns a Flux of Email objects.
+     *
+     * @return a Flux of Email objects
+     * @throws MessagingException if there is an error retrieving the messages
+     */
     public Flux<Email> retrieve() throws MessagingException {
 
         int batchSize = 1000; // Define your preferred batch size
@@ -64,7 +76,7 @@ public class ImapService {
             log.error("Failed to write batch number to batch.txt", e);
         }
     }
-    
+
     private int readBatchNumber() {
         try {
             var batchFilePath = Paths.get("batch.txt");
@@ -122,12 +134,12 @@ public class ImapService {
         return store;
     }
 
-    private FolderConfig retrieveConfig(Folder emailFolder, ClassifierConfiguration classifierConfiguration) throws MessagingException {
+    private FolderConfig retrieveConfig(Folder rootFolder, Set<String> folders) throws MessagingException {
         // spam
         final var builder = FolderConfig.builder();
-        final var map = classifierConfiguration.getDescriptions().keySet().stream().collect(Collectors.toMap(v -> v, v -> {
+        final var map = folders.stream().collect(Collectors.toMap(v -> v, v -> {
             try {
-                return ensureFolder(v, emailFolder);
+                return ensureFolder(v, rootFolder);
             } catch (MessagingException e) {
                 throw new RuntimeException(e);
             }
@@ -144,6 +156,11 @@ public class ImapService {
         return (IMAPFolder) folder;
     }
 
+    /**
+     * Reconnects to the IMAP store and reopens the INBOX folder.
+     *
+     * @throws MessagingException if there is an error reconnecting to the IMAP store or opening the folder
+     */
     public void reconnect() throws MessagingException {
         store.close();
         try {
@@ -154,6 +171,6 @@ public class ImapService {
         store = connect(configuration);
         emailFolder = store.getFolder("INBOX");
         emailFolder.open(Folder.READ_WRITE);
-        folderConfig = retrieveConfig(emailFolder, classifierConfiguration);
+        folderConfig = retrieveConfig(emailFolder, classifierConfiguration.getFolders());
     }
 }

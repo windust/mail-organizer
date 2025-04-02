@@ -40,22 +40,25 @@ public class OrganizerService {
                         .onErrorContinue((throwable, o) -> {
                             log.warn("Error when reading mail {}", throwable.getMessage(), throwable);
                         })
-                        .parallel()
-                        .runOn(Schedulers.fromExecutor(Executors.newVirtualThreadPerTaskExecutor()))
+//                        .parallel()
+//                        .runOn(Schedulers.fromExecutor(Executors.newVirtualThreadPerTaskExecutor()))
                         .flatMap(e -> {
-                            Email body;
+
                             try {
-                                body = e.withBody();
-                                return Mono.just(body);
+                                if (classifier.needsBody()) {
+                                    return Mono.just(e.withBody());
+                                } else {
+                                    return Mono.just(e);
+                                }
                             } catch (MessagingException | IOException ex) {
                                 // since it can't encode...
                                 progressStore.process(e);
                                 return Mono.error(ex);
                             }
                         })
-                        .sequential()
-                        .parallel(4)
-                        .runOn(Schedulers.boundedElastic())
+//                        .sequential()
+//                        .parallel(4)
+//                        .runOn(Schedulers.boundedElastic())
                         .flatMap(mail -> classifier.classify(mail)
                                 .map(c -> Tuples.of(mail, c)))
                         .doOnNext(tuples -> {
