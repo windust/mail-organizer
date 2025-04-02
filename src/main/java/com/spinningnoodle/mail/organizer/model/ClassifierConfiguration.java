@@ -21,9 +21,9 @@ public class ClassifierConfiguration {
                 .collect(Collectors.joining("\n\n"));
     }
 
-    public String identify(String string) {
+    public String identify(String inputString) {
         for (Map.Entry<String, String> entry : descriptions.entrySet()) {
-            if (string.toLowerCase().contains(entry.getKey().toLowerCase())) {
+            if (inputString.toLowerCase().contains(entry.getKey().toLowerCase())) {
                 return entry.getKey();
             }
         }

@@ -40,8 +40,6 @@ public class OrganizerService {
                         .onErrorContinue((throwable, o) -> {
                             log.warn("Error when reading mail {}", throwable.getMessage(), throwable);
                         })
-//                        .parallel()
-//                        .runOn(Schedulers.fromExecutor(Executors.newVirtualThreadPerTaskExecutor()))
                         .flatMap(e -> {
 
                             try {
@@ -56,22 +54,19 @@ public class OrganizerService {
                                 return Mono.error(ex);
                             }
                         })
-//                        .sequential()
-//                        .parallel(4)
-//                        .runOn(Schedulers.boundedElastic())
-                        .flatMap(mail -> classifier.classify(mail)
-                                .map(c -> Tuples.of(mail, c)))
-                        .doOnNext(tuples -> {
-                            final var email = tuples.getT1();
-                            final var mailType = tuples.getT2();
-                            log.info("{} Message Type: {} date: {} from:{}  subject: {}",
-                                    email.messageNumber(), mailType, email.date().toLocalDate(), email.sender(),
+                        .flatMap(mail ->
+                                classifier
+                                        .classify(mail)
+                                        .map(c -> new EmailWithCategory(mail, c)))
+                        .doOnNext(emailWithCategory -> {
+                            final var email = emailWithCategory.email;
+                            final var category = emailWithCategory.category;
+                            log.info("{} Category: {} date: {} from:{}  subject: {}",
+                                    email.messageNumber(), category, email.date().toLocalDate(), email.sender(),
                                     email.subject());
                             try {
-                                if (mailType.equals("Other")) {
-
-                                } else {
-                                    email.moveTo(mailType);
+                                if (!category.equals("Other")) {
+                                    email.moveTo(category);
                                 }
                                 progressStore.process(email);
                             } catch (MessagingException e) {
@@ -92,4 +87,6 @@ public class OrganizerService {
             }
         } while (!completed);
     }
+
+    private record EmailWithCategory(Email email, String category) {}
 }

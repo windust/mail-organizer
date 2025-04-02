@@ -24,4 +24,4 @@ classifier-configuration:
         These are typically informational and targeted at a subscribed audience."
     Order: "Email contains order number information, 
     or purchase information, or payment information, or status updates"
-  use-body: true
+  use-body: false

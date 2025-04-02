@@ -3,6 +3,20 @@
 
 Mail Organizer is a Java-based application designed to help manage and organize emails, particularly for handling spam and other unwanted messages. The application uses IMAP to connect to email servers, retrieve messages, and classify them using machine learning models.
 
+## BACK UP YOUR MAIL BEFORE USING THIS SOFTWARE
+- LLMs do Make Mistakes
+- This helps you pre-sort tons of emails
+  - You can choose to keep those
+  
+## THIS SOFTWARE WILL CREATE NEW IMAP FOLDERS
+- This software will create new IMAP folders
+- You will need to manually subscribe to them
+
+## THIS SOFTWARE CAN TAKE A WHILE TO RUN
+- IMAP synchronization can take a while, especially if you have a large number of emails
+- You may need to wait a while for the application to finish processing
+- You may need to configure your mail client to re-sync the contents of your inbox (and may take a while)
+
 ## Features
 
 - **IMAP Integration**: Connects to email servers using IMAP to retrieve messages.
