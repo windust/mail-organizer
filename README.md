@@ -46,6 +46,31 @@ Mail Organizer is a Java-based application designed to help manage and organize 
    ./gradlew bootRun
    ```
 
+### Download and Installing Ollama
+ - Visit the Ollama website and sign up for an account if you don't have one.
+ - Follow the instructions on the website to download the Ollama SDK for your operating system.
+ - Install the SDK by following the provided installation guide.
+
+
+### Make sure you have the latest version of the Llama3 model:
+   ```sh
+   ollama pull llama3.2:latest
+   ```
+### Configure the Application
+By default the application.yml is configured to use the Llama3 model. If you want to use a different model, you can change the configuration in the `application.yml` file.
+1. Open the `src/main/resources/application.yml` file.
+2. Locate the `spring.ai.ollama.chat.options.model` property and set it to the desired model name. For example, to use the latest version of Llama3, you can set it as follows:
+3. 
+   ```yaml
+   spring:
+     ai:
+       ollama:
+         chat:
+           options:
+             model: llama3.2:latest
+   ```
+
+3. Ensure you have the necessary API keys and access configured for Ollama.
 ## Configuration
 
 The application can be configured using a `application.yml` file. Here is an example configuration:
@@ -72,6 +97,11 @@ classifier-configuration:
     Order: "Email contains order number information,
         or purchase information, or payment information, or status updates"
 ```
+### The UseBody configuration
+The `useBody` configuration determines whether the email body should be used for classification. If set to `true`, the application will analyze the content of the email body in addition to the subject line. This can improve classification accuracy, especially for emails with ambiguous subjects.
+
+When is false, the application will only use the subject line for classification. This may be faster but could lead to less accurate results in some cases.
+
 
 ## Usage
 
