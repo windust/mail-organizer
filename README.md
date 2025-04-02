@@ -25,14 +25,14 @@ Mail Organizer is a Java-based application designed to help manage and organize 
 
 ### Prerequisites
 
-- Java 17 or higher
+- Java 21 or higher
 - Gradle 7.0 or higher
 
 ### Installation
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/mail-organizer.git
+   git clone https://github.com/windust/mail-organizer.git
    cd mail-organizer
    ```
 
