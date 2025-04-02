@@ -1,6 +1,4 @@
-Here is the updated `README.md` file with the requested warnings added:
 
-```markdown
 # Mail Organizer
 
 Mail Organizer is a Java-based application designed to help manage and organize emails, particularly for handling spam and other unwanted messages. The application uses IMAP to connect to email servers, retrieve messages, and classify them using machine learning models.
@@ -94,4 +92,3 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ## Contact
 
 For any questions or support, please contact [your-email@example.com](mailto:your-email@example.com).
-```
