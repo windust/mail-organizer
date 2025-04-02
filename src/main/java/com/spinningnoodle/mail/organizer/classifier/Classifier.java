@@ -4,6 +4,7 @@ import com.spinningnoodle.mail.organizer.model.ClassifierConfiguration;
 import com.spinningnoodle.mail.organizer.model.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class Classifier {
-    private final OllamaChatModel chatModel;
+    private final ChatModel chatModel;
     private final String templateContent;
     private final ClassifierConfiguration configuration;
 
@@ -34,7 +35,7 @@ public class Classifier {
      * @param configuration the classifier configuration
      * @throws IOException if there is an error reading the prompt template file
      */
-    public Classifier(OllamaChatModel chatModel, ClassifierConfiguration configuration) throws IOException {
+    public Classifier(ChatModel chatModel, ClassifierConfiguration configuration) throws IOException {
         this.chatModel = chatModel;
         this.configuration = configuration;
         Path path = new ClassPathResource("prompt.st").getFile().toPath();

@@ -19,9 +19,10 @@ classifier-configuration:
           by email systems."
     Flyer: "Email that include sales, percent off, price drops, 
           and is usually from known retailers"
+    Fundraiser: "Emails that ask for donations or contributions to a political campaign"
     Newsletter: "Regularly sent emails that provide updates, articles, 
         or news about a specific topic, organization, or interest. 
         These are typically informational and targeted at a subscribed audience."
     Order: "Email contains order number information, 
     or purchase information, or payment information, or status updates"
-  use-body: false
+  use-body: true

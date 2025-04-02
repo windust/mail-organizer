@@ -108,9 +108,10 @@ public record Email(String subject, String body, String sender, LocalDateTime da
                         builder.append(parse(bodyPart2.getContent().toString()));
                     }
                 }
-            } else if (content instanceof IMAPInputStream) {
-                IMAPInputStream imapInputStream = (IMAPInputStream) content;
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(imapInputStream))) {
+            } else if (content instanceof IMAPInputStream imapInputStream) {
+                try (BufferedReader reader =
+                             new BufferedReader(
+                                     new InputStreamReader(imapInputStream))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         builder.append(line).append("\n");
