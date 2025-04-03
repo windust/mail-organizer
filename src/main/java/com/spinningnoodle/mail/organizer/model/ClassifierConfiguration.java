@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Data
 public class ClassifierConfiguration {
     private boolean useBody;
+    private boolean dryRun;
     Map<String, String> descriptions;
 
     public String forPrompt() {

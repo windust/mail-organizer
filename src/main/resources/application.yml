@@ -3,6 +3,7 @@ spring:
     name: organizer
   ai.ollama.chat.options:
     model:  llama3.2:latest
+#    model:  deepseek-r1:1.5b
 
 imap:
   username: "some username"
@@ -26,3 +27,4 @@ classifier-configuration:
     Order: "Email contains order number information, 
     or purchase information, or payment information, or status updates"
   use-body: true
+  dry-run: false

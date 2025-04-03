@@ -64,15 +64,17 @@ public class OrganizerService {
                             log.info("{} Category: {} date: {} from:{}  subject: {}",
                                     email.messageNumber(), category, email.date().toLocalDate(), email.sender(),
                                     email.subject());
-                            try {
-                                if (!category.equals("Other")) {
-                                    email.moveTo(category);
+                            if (!classifier.dryRun()) {
+                                try {
+                                    if (!category.equals("Other")) {
+                                        email.moveTo(category);
+                                    }
+                                    progressStore.process(email);
+                                } catch (MessagingException e) {
+                                    progressStore.process(email);
+                                    // we can continue, but at least recycle connection?
+                                    throw new RuntimeException(e);
                                 }
-                                progressStore.process(email);
-                            } catch (MessagingException e) {
-                                progressStore.process(email);
-                                // we can continue, but at least recycle connection?
-                                throw new RuntimeException(e);
                             }
                         })
                         .then()

@@ -69,4 +69,8 @@ public class Classifier {
     public boolean needsBody() {
         return configuration.isUseBody();
     }
+
+    public boolean dryRun() {
+        return configuration.isDryRun();
+    }
 }

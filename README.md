@@ -111,10 +111,13 @@ classifier-configuration:
     Order: "Email contains order number information,
         or purchase information, or payment information, or status updates"
 ```
-### The UseBody configuration
-The `useBody` configuration determines whether the email body should be used for classification. If set to `true`, the application will analyze the content of the email body in addition to the subject line. This can improve classification accuracy, especially for emails with ambiguous subjects.
+### The use-body configuration
+The `use-body` configuration determines whether the email body should be used for classification. If set to `true`, the application will analyze the content of the email body in addition to the subject line. This can improve classification accuracy, especially for emails with ambiguous subjects.
 
 When is false, the application will only use the subject line for classification. This may be faster but could lead to less accurate results in some cases.
+
+### The dry-run configuration
+The `dry-run` configuration allows you to test the classification process without actually moving any emails. This is useful for verifying the classification rules and ensuring that the application behaves as expected before making any changes to your mailbox.
 
 
 ## Usage
