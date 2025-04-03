@@ -18,7 +18,7 @@ Mail Organizer is a Java-based application designed to help manage and organize 
 - You may need to configure your mail client to re-sync the contents of your inbox (and may take a while)
 
 ## Presentation
-- [Mail Organizer Presentation](docs/presentation.pptx)
+- [Mail Organizer Presentation](docs/presentation.pdf)
 
 
 ## Features
